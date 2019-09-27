@@ -5,6 +5,8 @@
 
 # nl80211
 
+[API documentation](https://docs.rs/nl80211/)
+
 Send command to nl80211 and receive messages.
 
 :warning: Work in progress.
