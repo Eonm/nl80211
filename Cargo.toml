@@ -5,6 +5,8 @@ authors = ["eonm <eon.mathis@gmail.com>"]
 edition = "2018"
 license = "MIT"
 description = "Send commands to nl80211 and receive messages"
+homepage = "https://github.com/Eonm/nl80211"
+repository = "https://github.com/Eonm/nl80211"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
