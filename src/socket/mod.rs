@@ -22,7 +22,8 @@ impl Socket {
     /// Create a new nl80211 socket with netlink
     ///
     /// # Example
-    /// ```
+    ///
+    /// ```no_run
     /// # use nl80211::{Socket, Nl80211Attr, Nl80211Cmd, NL_80211_GENL_VERSION, PrettyFormat};
     /// # use neli::nlattr::Nlattr;
     /// # use neli::genl::Genlmsghdr;
@@ -91,7 +92,7 @@ impl Socket {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```no_run
     /// # use nl80211::{Socket, PrettyFormat};
     ///
     /// # fn main() -> Result<(), neli::err::NlError>{
@@ -141,7 +142,7 @@ impl Socket {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```no_run
     /// # use nl80211::{Socket, PrettyFormat};
     ///
     /// # fn main() -> Result<(), neli::err::NlError>{
