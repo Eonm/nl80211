@@ -11,4 +11,4 @@ description = "Send commands to nl80211 and receive messages"
 [dependencies]
 buffering = { version = "0.3.2",  features = ["copy"] }
 neli = "0.4.3-r1"
-hex = "*"
+hex = "0.4.0"
