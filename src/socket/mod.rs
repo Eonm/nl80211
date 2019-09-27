@@ -87,7 +87,6 @@ impl Socket {
         })
     }
 
-    #[doc(inline)]
     /// Get information for all your wifi interfaces
     ///
     /// # Example
