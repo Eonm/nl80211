@@ -3,6 +3,8 @@ name = "nl80211"
 version = "0.0.1"
 authors = ["eonm <eon.mathis@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "Send commands to nl80211 and receive messages"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
