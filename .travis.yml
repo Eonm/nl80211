@@ -32,7 +32,7 @@ script:
 
 after_success:
 # measure code coverage and upload to coveralls.io
-  - cargo coveralls --exclude-path=src/socket/ --exclude-pattern=src/attr.rs,src/cmd.rs,/.cargo
+  - cargo coveralls --exclude-pattern=src/socket/mod.rs,src/attr.rs,src/cmd.rs,/.cargo
 
 notifications:
   email: false
