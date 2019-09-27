@@ -1,3 +1,4 @@
+[![Crates.io](https://img.shields.io/crates/v/nl80211.svg)](https://crates.io/crates/nl80211)
 [![Coverage Status](https://coveralls.io/repos/github/Eonm/nl80211/badge.svg?branch=master)](https://coveralls.io/github/Eonm/nl80211?branch=master)
 [![Build Status](https://travis-ci.org/Eonm/nl80211.svg?branch=master)](https://travis-ci.org/Eonm/nl80211)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -9,7 +10,7 @@
 
 This crate aims to provide a low level access to nl80211.
 
-This crate is inspired by the go [wifi](https://github.com/mdlayher/wifi) package made by @mdlayher.
+This crate is inspired by the go [wifi](https://github.com/mdlayher/wifi) package made by [@mdlayher](https://github.com/mdlayher).
 
 :warning: __This library only works on Linux.__
 
