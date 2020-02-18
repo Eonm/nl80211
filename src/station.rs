@@ -1,3 +1,4 @@
+use std::fmt;
 use crate::attr::{Nl80211Attr, Nl80211StaInfo};
 use crate::nl80211traits::*;
 use crate::parse_attr::{parse_hex, parse_i8, parse_u32, parse_u8};
@@ -119,8 +120,8 @@ impl ParseNlAttr for Station {
     }
 }
 
-impl PrettyFormat for Station {
-    fn pretty_format(&self) -> String {
+impl fmt::Display for Station {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut result = Vec::new();
 
         if let Some(bssid) = &self.bssid {
@@ -170,7 +171,7 @@ impl PrettyFormat for Station {
             result.push(format!("tx failed : {}", parse_u32(tx_failed)))
         }
 
-        result.join("\n")
+        write!(f, "{}", result.join("\n"))
     }
 }
 
@@ -210,7 +211,7 @@ mod tests_station {
         tx failed : 45"#;
 
         assert_eq!(
-            station.pretty_format(),
+            format!("{}", station),
             expected_output.replace("\n        ", "\n")
         )
     }

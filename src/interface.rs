@@ -1,6 +1,6 @@
+use std::fmt;
 use crate::attr::*;
 use crate::nl80211traits::ParseNlAttr;
-use crate::nl80211traits::PrettyFormat;
 use crate::parse_attr::parse_u32;
 use crate::parse_attr::parse_u64;
 use crate::socket::Socket;
@@ -86,8 +86,8 @@ impl ParseNlAttr for Interface {
     }
 }
 
-impl PrettyFormat for Interface {
-    fn pretty_format(&self) -> String {
+impl fmt::Display for Interface {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut result = Vec::new();
 
         if let Some(ssid) = &self.ssid {
@@ -125,7 +125,7 @@ impl PrettyFormat for Interface {
             result.push(format!("device : {}", parse_u64(device)))
         };
 
-        result.join("\n")
+        write!(f, "{}", result.join("\n"))
     }
 }
 
@@ -159,7 +159,7 @@ mod test_interface {
         device : 1"#;
 
         assert_eq!(
-            interface.pretty_format(),
+            format!("{}", interface),
             expected_output.replace("\n        ", "\n")
         )
     }

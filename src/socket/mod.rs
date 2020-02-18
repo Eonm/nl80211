@@ -24,7 +24,7 @@ impl Socket {
     /// # Example
     ///
     /// ```no_run
-    /// # use nl80211::{Socket, Nl80211Attr, Nl80211Cmd, NL_80211_GENL_VERSION, PrettyFormat};
+    /// # use nl80211::{Socket, Nl80211Attr, Nl80211Cmd, NL_80211_GENL_VERSION};
     /// # use neli::nlattr::Nlattr;
     /// # use neli::genl::Genlmsghdr;
     /// # use neli::nl::Nlmsghdr;
@@ -92,12 +92,12 @@ impl Socket {
     /// # Example
     ///
     /// ```no_run
-    /// # use nl80211::{Socket, PrettyFormat};
+    /// # use nl80211::Socket;
     ///
     /// # fn main() -> Result<(), neli::err::NlError>{
     ///     let wifi_interfaces = Socket::connect()?.get_interfaces_info();
     ///     for wifi_interface in wifi_interfaces? {
-    ///         println!("{}", wifi_interface.pretty_format());
+    ///         println!("{}", wifi_interface);
     ///     }
     /// #   Ok(())
     /// # }
@@ -142,7 +142,7 @@ impl Socket {
     /// # Example
     ///
     /// ```no_run
-    /// # use nl80211::{Socket, PrettyFormat};
+    /// # use nl80211::Socket;
     ///
     /// # fn main() -> Result<(), neli::err::NlError>{
     ///   // First of all we need to get wifi interface information to get more data
@@ -152,7 +152,7 @@ impl Socket {
     ///
     ///       // Then for each wifi interface we can fetch station information
     ///       let station_info = Socket::connect()?.get_station_info(&netlink_index.clone())?;
-    ///           println!("{}", station_info.pretty_format());
+    ///           println!("{}", station_info);
     ///       }
     ///     }
     /// #   Ok(())

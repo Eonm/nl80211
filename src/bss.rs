@@ -1,7 +1,7 @@
+use std::fmt;
 use crate::attr::Nl80211Attr;
 use crate::attr::Nl80211Bss;
 use crate::nl80211traits::ParseNlAttr;
-use crate::nl80211traits::PrettyFormat;
 use crate::parse_attr::{parse_hex, parse_i32, parse_u16, parse_u32};
 use neli::nlattr::AttrHandle;
 
@@ -34,8 +34,8 @@ impl Bss {
     }
 }
 
-impl PrettyFormat for Bss {
-    fn pretty_format(&self) -> String {
+impl fmt::Display for Bss {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut result = Vec::new();
 
         if let Some(bssid) = &self.bssid {
@@ -71,7 +71,7 @@ impl PrettyFormat for Bss {
             ))
         };
 
-        result.join("\n")
+        write!(f, "{}", result.join("\n"))
     }
 }
 
@@ -135,7 +135,7 @@ mod test_bss {
         signal : -53.0 dBm"#;
 
         assert_eq!(
-            bss.pretty_format(),
+            format!("{}", bss),
             expected_output.replace("\n        ", "\n")
         )
     }

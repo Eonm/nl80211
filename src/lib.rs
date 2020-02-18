@@ -26,7 +26,6 @@
 //! extern crate neli;
 //!
 //! use nl80211::Socket;
-//! use nl80211::PrettyFormat;
 //!
 //! fn main() -> Result<(), neli::err::NlError> {
 //!   let interfaces = Socket::connect()?.get_interfaces_info()?;
@@ -46,7 +45,7 @@
 //!       //   device: Some([1, 0, 0, 0, 0, 0, 0, 0])
 //!       // }
 //!
-//!       println!("{}", interface.pretty_format());
+//!       println!("{}", interface);
 //!
 //!       // essid : eduroam
 //!       // mac : FF:FF:FF:FF:FF:FF
@@ -69,13 +68,12 @@
 //! extern crate neli;
 //!
 //! use nl80211::Socket;
-//! use nl80211::PrettyFormat;
 //!
 //! fn main() -> Result<(), neli::err::NlError> {
 //!   let interfaces = Socket::connect()?.get_interfaces_info()?;
 //!   for interface in interfaces {
 //!       let station = interface.get_station_info();
-//!       println!("{}", station?.pretty_format());
+//!       println!("{}", station?);
 //!
 //!       // bssid : FF:FF:FF:FF:FF:FF
 //!       // connected time : 35.816666 minutes
