@@ -24,16 +24,39 @@ This crate has some built-in functions to fetch information and metrics of wifi 
 
 ```rust
 extern crate nl80211;
-extern crate neli;
+
+use std::error::Error;
+use nl80211::Socket;
+
+fn main() -> Result<(), Box<dyn Error>> {
+  let interfaces = Socket::connect()?.get_interfaces_info()?;
+  for interface in interfaces {
+      let station = interface.get_station_info();
+      println!("{}", station?.pretty_format());
+
+      // bssid : FF:FF:FF:FF:FF:FF
+      // connected time : 35.816666 minutes
+      // beacon loss : 0
+      // signal : -60 dBm
+      // average signal : -61 dBm
+      // rx packets : 148983
+      // tx packets : 46335
+      // rx bitrate : 60 Mb/s
+      // tx bitrate : 140 Mb/s
+      // tx retries : 12578
+      // tx failed : 2
+  }
+
+  Ok(())
+}
 
 use nl80211::Socket;
-use nl80211::PrettyFormat;
 
 fn main() -> Result<(), neli::err::NlError> {
   let interfaces = Socket::connect()?.get_interfaces_info()?;
 
   for interface in interfaces {
-      println!("{:#?}", interface);
+      println!("{}", interface);
 
       // Interface {
       //   index: Some([3, 0, 0, 0]),
@@ -47,7 +70,7 @@ fn main() -> Result<(), neli::err::NlError> {
       //   device: Some([1, 0, 0, 0, 0, 0, 0, 0])
       // }
 
-      println!("{}", interface.pretty_format());
+      println!("{}", interface);
 
       // essid : eduroam
       // mac : FF:FF:FF:FF:FF:FF
@@ -67,16 +90,15 @@ fn main() -> Result<(), neli::err::NlError> {
 
 ```rust
 extern crate nl80211;
-extern crate neli;
 
+use std::error::Error;
 use nl80211::Socket;
-use nl80211::PrettyFormat;
 
-fn main() -> Result<(), neli::err::NlError> {
+fn main() -> Result<(), Box<dyn Error>> {
   let interfaces = Socket::connect()?.get_interfaces_info()?;
   for interface in interfaces {
       let station = interface.get_station_info();
-      println!("{}", station?.pretty_format());
+      println!("{}", station?);
 
       // bssid : FF:FF:FF:FF:FF:FF
       // connected time : 35.816666 minutes
