@@ -41,8 +41,8 @@ fn main() -> Result<(), Box<dyn Error>> {
       // average signal : -61 dBm
       // rx packets : 148983
       // tx packets : 46335
-      // rx bitrate : 60 Mb/s
-      // tx bitrate : 140 Mb/s
+      // rx bitrate : 60.0 Mb/s
+      // tx bitrate : 140.0 Mb/s
       // tx retries : 12578
       // tx failed : 2
   }
@@ -107,8 +107,8 @@ fn main() -> Result<(), Box<dyn Error>> {
       // average signal : -61 dBm
       // rx packets : 148983
       // tx packets : 46335
-      // rx bitrate : 60 Mb/s
-      // tx bitrate : 140 Mb/s
+      // rx bitrate : 60.0 Mb/s
+      // tx bitrate : 140.0 Mb/s
       // tx retries : 12578
       // tx failed : 2
   }
