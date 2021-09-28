@@ -1,7 +1,7 @@
 use std::fmt;
-use crate::attr::{Nl80211Attr, Nl80211StaInfo};
+use crate::attr::{Nl80211Attr, Nl80211RateInfo, Nl80211StaInfo};
 use crate::nl80211traits::*;
-use crate::parse_attr::{parse_hex, parse_i8, parse_u32, parse_u8};
+use crate::parse_attr::{parse_hex, parse_i8, parse_u32};
 use neli::nlattr::AttrHandle;
 
 /// A struct representing a remote station (Access Point)
@@ -15,13 +15,13 @@ pub struct Station {
     pub bssid: Option<Vec<u8>>,
     /// Time since the station is last connected in seconds (u32)
     pub connected_time: Option<Vec<u8>>,
-    /// Reception bitrate (u8)
+    /// Reception bitrate (u32)
     pub rx_bitrate: Option<Vec<u8>>,
     /// Total received packets (MSDUs and MMPDUs) from this station (u32)
     pub rx_packets: Option<Vec<u8>>,
     /// Signal strength of last received PPDU (u8, dBm)
     pub signal: Option<Vec<u8>>,
-    /// Transmission bitrate (u8)
+    /// Transmission bitrate (u32)
     pub tx_bitrate: Option<Vec<u8>>,
     /// Total failed packets (MPDUs) to this station (u32)
     pub tx_failed: Option<Vec<u8>>,
@@ -87,10 +87,10 @@ impl ParseNlAttr for Station {
                             }
                             Nl80211StaInfo::StaInfoRxBitrate => {
                                 let bit_rate_handle =
-                                    sub_attr.get_nested_attributes::<Nl80211StaInfo>().unwrap();
+                                    sub_attr.get_nested_attributes::<Nl80211RateInfo>().unwrap();
                                 for sub_sub_attr in bit_rate_handle.iter() {
                                     match sub_sub_attr.nla_type {
-                                        Nl80211StaInfo::StaInfoRxBytes => {
+                                        Nl80211RateInfo::RateInfoBitrate32 => {
                                             self.rx_bitrate = Some(sub_sub_attr.payload.clone())
                                         }
                                         _ => (),
@@ -99,10 +99,10 @@ impl ParseNlAttr for Station {
                             }
                             Nl80211StaInfo::StaInfoTxBitrate => {
                                 let bit_rate_handle =
-                                    sub_attr.get_nested_attributes::<Nl80211StaInfo>().unwrap();
+                                    sub_attr.get_nested_attributes::<Nl80211RateInfo>().unwrap();
                                 for sub_sub_attr in bit_rate_handle.iter() {
                                     match sub_sub_attr.nla_type {
-                                        Nl80211StaInfo::StaInfoRxBytes => {
+                                        Nl80211RateInfo::RateInfoBitrate32 => {
                                             self.tx_bitrate = Some(sub_sub_attr.payload.clone())
                                         }
                                         _ => (),
@@ -155,12 +155,22 @@ impl fmt::Display for Station {
             result.push(format!("tx packets : {}", parse_u32(tx_packets)))
         };
 
-        if let Some(rx_bitrate) = &self.rx_bitrate {
-            result.push(format!("rx bitrate : {} Mb/s", parse_u8(rx_bitrate) * 10))
+        if let Some(bitrate) = &self.rx_bitrate {
+            let bitrate = parse_u32(bitrate);
+            result.push(format!(
+                "rx bitrate : {}.{} Mb/s",
+                bitrate / 10,
+                bitrate % 10
+            ))
         };
 
-        if let Some(tx_bitrate) = &self.tx_bitrate {
-            result.push(format!("tx bitrate : {} Mb/s", parse_u8(tx_bitrate) * 10))
+        if let Some(bitrate) = &self.tx_bitrate {
+            let bitrate = parse_u32(bitrate);
+            result.push(format!(
+                "tx bitrate : {}.{} Mb/s",
+                bitrate / 10,
+                bitrate % 10
+            ))
         }
 
         if let Some(tx_retries) = &self.tx_retries {
@@ -189,10 +199,10 @@ mod tests_station {
             beacon_loss: Some(vec![0, 0, 0, 0]),
             bssid: Some(vec![255, 255, 255, 255, 255, 255]),
             connected_time: Some(vec![118, 21, 0, 0]),
-            rx_bitrate: Some(vec![12]),
+            rx_bitrate: Some(vec![100, 25, 0, 0]),
             rx_packets: Some(vec![108, 126, 6, 0]),
             signal: Some(vec![195]),
-            tx_bitrate: Some(vec![13]),
+            tx_bitrate: Some(vec![219, 33, 0, 0]),
             tx_failed: Some(vec![45, 0, 0, 0]),
             tx_packets: Some(vec![14, 89, 2, 0]),
             tx_retries: Some(vec![9, 111, 0, 0]),
@@ -205,8 +215,8 @@ mod tests_station {
         average signal : -59 dBm
         rx packets : 425580
         tx packets : 153870
-        rx bitrate : 120 Mb/s
-        tx bitrate : 130 Mb/s
+        rx bitrate : 650.0 Mb/s
+        tx bitrate : 866.7 Mb/s
         tx retries : 28425
         tx failed : 45"#;
 
@@ -334,10 +344,10 @@ mod tests_station {
             beacon_loss: Some(vec![0, 0, 0, 0]),
             bssid: Some(vec![46, 46, 46, 46, 46, 46]),
             connected_time: Some(vec![17, 27, 0, 0]),
-            rx_bitrate: Some(vec![4]),
+            rx_bitrate: Some(vec![134, 1, 0, 0]),
             rx_packets: Some(vec![226, 128, 7, 0]),
             signal: Some(vec![218]),
-            tx_bitrate: Some(vec![13]),
+            tx_bitrate: Some(vec![16, 4, 0, 0]),
             tx_failed: Some(vec![47, 0, 0, 0]),
             tx_packets: Some(vec![9, 170, 2, 0]),
             tx_retries: Some(vec![27, 130, 0, 0]),
