@@ -1,4 +1,3 @@
-use std::fmt;
 use crate::attr::*;
 use crate::nl80211traits::ParseNlAttr;
 use crate::parse_attr::parse_u32;
@@ -6,11 +5,12 @@ use crate::parse_attr::parse_u64;
 use crate::socket::Socket;
 use crate::station::Station;
 use neli::nlattr::AttrHandle;
+use std::fmt;
 
 use crate::parse_attr::{parse_hex, parse_string};
 
 /// A struct representing a wifi interface
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct Interface {
     /// A netlink interface index. This index is used to fetch extra information with nl80211
     pub index: Option<Vec<u8>>,
@@ -33,20 +33,6 @@ pub struct Interface {
 }
 
 impl Interface {
-    pub fn default() -> Interface {
-        Interface {
-            index: None,
-            ssid: None,
-            mac: None,
-            name: None,
-            frequency: None,
-            channel: None,
-            power: None,
-            phy: None,
-            device: None,
-        }
-    }
-
     /// Get station info for this interface
     pub fn get_station_info(&self) -> Result<Station, neli::err::NlError> {
         if let Some(index) = &self.index {
@@ -91,15 +77,15 @@ impl fmt::Display for Interface {
         let mut result = Vec::new();
 
         if let Some(ssid) = &self.ssid {
-            result.push(format!("essid : {}", parse_string(&ssid)))
+            result.push(format!("essid : {}", parse_string(ssid)))
         };
 
         if let Some(mac) = &self.mac {
-            result.push(format!("mac : {}", parse_hex(&mac)))
+            result.push(format!("mac : {}", parse_hex(mac)))
         };
 
         if let Some(name) = &self.name {
-            result.push(format!("interface : {}", parse_string(&name)))
+            result.push(format!("interface : {}", parse_string(name)))
         };
 
         if let Some(frequency) = &self.frequency {

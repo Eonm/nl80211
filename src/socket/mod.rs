@@ -1,16 +1,15 @@
 use crate::bss::Bss;
-use crate::station::Station;
 use crate::nl80211traits::ParseNlAttr;
-// use crate::station::parse_station;
-use neli::consts::{NlFamily,NlmF,Nlmsg};
-use neli::socket::NlSocket;
-use neli::nl::Nlmsghdr;
-use neli::genl::Genlmsghdr;
-use crate::consts::{NL_80211_GENL_NAME, NL_80211_GENL_VERSION};
+use crate::station::Station;
 use crate::attr::Nl80211Attr;
 use crate::cmd::Nl80211Cmd;
+use crate::consts::{NL_80211_GENL_NAME, NL_80211_GENL_VERSION};
 use crate::interface::Interface;
+use neli::consts::{NlFamily, NlmF, Nlmsg};
+use neli::genl::Genlmsghdr;
+use neli::nl::Nlmsghdr;
 use neli::nlattr::Nlattr;
+use neli::socket::NlSocket;
 
 /// A generic netlink socket to send commands and receive messages
 pub struct Socket {
@@ -69,10 +68,8 @@ impl Socket {
     /// # }
     /// ```
     pub fn connect() -> Result<Self, neli::err::NlError> {
-        let family_id = {
-            NlSocket::new(NlFamily::Generic, true)?
-                .resolve_genl_family(NL_80211_GENL_NAME)?
-        };
+        let family_id =
+            { NlSocket::new(NlFamily::Generic, true)?.resolve_genl_family(NL_80211_GENL_NAME)? };
 
         let track_seq = true;
         let mut nl80211sock = NlSocket::new(NlFamily::Generic, track_seq)?;
@@ -83,7 +80,7 @@ impl Socket {
 
         Ok(Self {
             sock: nl80211sock,
-            family_id: family_id,
+            family_id,
         })
     }
 
@@ -130,7 +127,7 @@ impl Socket {
                 _ => {
                     let handle = response.nl_payload.get_attr_handle();
                     interfaces.push(Interface::default().parse(handle));
-                },
+                }
             };
         }
 
@@ -158,11 +155,18 @@ impl Socket {
     /// #   Ok(())
     /// # }
     ///```
-    pub fn get_station_info(&mut self, interface_attr_if_index: &Vec<u8>) -> Result<Station, neli::err::NlError>  {
+    pub fn get_station_info(
+        &mut self,
+        interface_attr_if_index: &Vec<u8>,
+    ) -> Result<Station, neli::err::NlError> {
         let nl80211sock = &mut self.sock;
 
         let mut attrs: Vec<Nlattr<Nl80211Attr, Vec<u8>>> = vec![];
-        let new_attr= Nlattr::new(None, Nl80211Attr::AttrIfindex, interface_attr_if_index.to_owned())?;
+        let new_attr = Nlattr::new(
+            None,
+            Nl80211Attr::AttrIfindex,
+            interface_attr_if_index.to_owned(),
+        )?;
         attrs.push(new_attr);
 
         let genlhdr = Genlmsghdr::new(Nl80211Cmd::CmdGetStation, NL_80211_GENL_VERSION, attrs)?;
@@ -182,23 +186,30 @@ impl Socket {
 
         while let Some(Ok(response)) = iter.next() {
             match response.nl_type {
-                    Nlmsg::Error => panic!("Error"),
-                    Nlmsg::Done => break,
-                    _ => {
-                        let  handle = response.nl_payload.get_attr_handle();
-                        return Ok(Station::default().parse(handle));
-                    },
+                Nlmsg::Error => panic!("Error"),
+                Nlmsg::Done => break,
+                _ => {
+                    let handle = response.nl_payload.get_attr_handle();
+                    return Ok(Station::default().parse(handle));
+                }
             };
         }
-        return Ok(Station::default())
+        Ok(Station::default())
     }
 
-    pub fn get_bss_info(&mut self, interface_attr_if_index: &Vec<u8>) -> Result<Bss, neli::err::NlError> {
+    pub fn get_bss_info(
+        &mut self,
+        interface_attr_if_index: &Vec<u8>,
+    ) -> Result<Bss, neli::err::NlError> {
         let nl80211sock = &mut self.sock;
 
         let mut attrs: Vec<Nlattr<Nl80211Attr, Vec<u8>>> = vec![];
 
-        let new_attr= Nlattr::new(None, Nl80211Attr::AttrIfindex, interface_attr_if_index.to_owned())?;
+        let new_attr = Nlattr::new(
+            None,
+            Nl80211Attr::AttrIfindex,
+            interface_attr_if_index.to_owned(),
+        )?;
         attrs.push(new_attr);
 
         let genlhdr = Genlmsghdr::new(Nl80211Cmd::CmdGetScan, NL_80211_GENL_VERSION, attrs)?;
@@ -218,14 +229,14 @@ impl Socket {
 
         while let Some(Ok(response)) = iter.next() {
             match response.nl_type {
-                    Nlmsg::Error => panic!("Error"),
-                    Nlmsg::Done => break,
-                    _ => {
-                        let  handle = response.nl_payload.get_attr_handle();
-                        return Ok(Bss::default().parse(handle))
-                    }
+                Nlmsg::Error => panic!("Error"),
+                Nlmsg::Done => break,
+                _ => {
+                    let handle = response.nl_payload.get_attr_handle();
+                    return Ok(Bss::default().parse(handle));
                 }
             }
+        }
         Ok(Bss::default())
     }
 

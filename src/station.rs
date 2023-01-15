@@ -1,11 +1,11 @@
-use std::fmt;
 use crate::attr::{Nl80211Attr, Nl80211StaInfo};
 use crate::nl80211traits::*;
 use crate::parse_attr::{parse_hex, parse_i8, parse_u32, parse_u8};
 use neli::nlattr::AttrHandle;
+use std::fmt;
 
 /// A struct representing a remote station (Access Point)
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct Station {
     /// Signal strength average (i8, dBm)
     pub average_signal: Option<Vec<u8>>,
@@ -29,24 +29,6 @@ pub struct Station {
     pub tx_packets: Option<Vec<u8>>,
     /// Total retries (MPDUs) to this station (u32)
     pub tx_retries: Option<Vec<u8>>,
-}
-
-impl Station {
-    pub fn default() -> Station {
-        Station {
-            bssid: None,
-            connected_time: None,
-            beacon_loss: None,
-            signal: None,
-            average_signal: None,
-            rx_packets: None,
-            tx_packets: None,
-            rx_bitrate: None,
-            tx_bitrate: None,
-            tx_retries: None,
-            tx_failed: None,
-        }
-    }
 }
 
 impl ParseNlAttr for Station {
@@ -89,11 +71,8 @@ impl ParseNlAttr for Station {
                                 let bit_rate_handle =
                                     sub_attr.get_nested_attributes::<Nl80211StaInfo>().unwrap();
                                 for sub_sub_attr in bit_rate_handle.iter() {
-                                    match sub_sub_attr.nla_type {
-                                        Nl80211StaInfo::StaInfoRxBytes => {
-                                            self.rx_bitrate = Some(sub_sub_attr.payload.clone())
-                                        }
-                                        _ => (),
+                                    if sub_sub_attr.nla_type == Nl80211StaInfo::StaInfoRxBytes {
+                                        self.rx_bitrate = Some(sub_sub_attr.payload.clone())
                                     }
                                 }
                             }
@@ -101,11 +80,8 @@ impl ParseNlAttr for Station {
                                 let bit_rate_handle =
                                     sub_attr.get_nested_attributes::<Nl80211StaInfo>().unwrap();
                                 for sub_sub_attr in bit_rate_handle.iter() {
-                                    match sub_sub_attr.nla_type {
-                                        Nl80211StaInfo::StaInfoRxBytes => {
-                                            self.tx_bitrate = Some(sub_sub_attr.payload.clone())
-                                        }
-                                        _ => (),
+                                    if sub_sub_attr.nla_type == Nl80211StaInfo::StaInfoRxBytes {
+                                        self.tx_bitrate = Some(sub_sub_attr.payload.clone())
                                     }
                                 }
                             }

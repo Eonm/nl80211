@@ -481,7 +481,6 @@ impl_var_trait!(
     FrequencyAttrMax          => 17
 );
 
-
 impl_var_trait!(
     /// nl80211BitrateAttr
     ///
@@ -587,7 +586,6 @@ impl_var_trait!(
     UserRegHintCellBase => 1,
     UserRegHintIndoor   => 2
 );
-
 
 impl_var_trait!(
     /// nl80211SurveyInfo

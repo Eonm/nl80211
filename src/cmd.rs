@@ -2,7 +2,7 @@ use neli::consts::Cmd;
 use neli::{impl_var, impl_var_base, impl_var_trait};
 
 // https://github.com/mdlayher/wifi/blob/b1436901ddee2ea3ee8782a440a084e457615766/internal/nl80211/const.go
-    impl_var_trait!(
+impl_var_trait!(
     /// nl80211Commands
     ///
     /// Enumeration from nl80211/nl80211.h:880

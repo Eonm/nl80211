@@ -1,12 +1,12 @@
-use std::fmt;
 use crate::attr::Nl80211Attr;
 use crate::attr::Nl80211Bss;
 use crate::nl80211traits::ParseNlAttr;
 use crate::parse_attr::{parse_hex, parse_i32, parse_u16, parse_u32};
 use neli::nlattr::AttrHandle;
+use std::fmt;
 
 /// A struct representing a BSS (Basic Service Set)
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct Bss {
     pub bssid: Option<Vec<u8>>,
     /// Frequency in MHz (u32)
@@ -19,19 +19,6 @@ pub struct Bss {
     pub status: Option<Vec<u8>>,
     /// Signal strength of probe response/beacon in mBm (100 * dBm) (i32)
     pub signal: Option<Vec<u8>>,
-}
-
-impl Bss {
-    pub fn default() -> Bss {
-        Bss {
-            bssid: None,
-            frequency: None,
-            beacon_interval: None,
-            seen_ms_ago: None,
-            status: None,
-            signal: None,
-        }
-    }
 }
 
 impl fmt::Display for Bss {
@@ -80,30 +67,23 @@ impl ParseNlAttr for Bss {
     fn parse(&mut self, handle: AttrHandle<Nl80211Attr>) -> Bss {
         for attr in handle.iter() {
             println!("{:?}", attr);
-            match attr.nla_type {
-                Nl80211Attr::AttrBss => {
-                    let sub_handle = attr.get_nested_attributes::<Nl80211Bss>().unwrap();
-                    for sub_attr in sub_handle.iter() {
-                        match sub_attr.nla_type {
-                            Nl80211Bss::BssBeaconInterval => {
-                                self.beacon_interval = Some(sub_attr.payload.clone())
-                            }
-                            Nl80211Bss::BssFrequency => {
-                                self.frequency = Some(sub_attr.payload.clone())
-                            }
-                            Nl80211Bss::BssSeenMsAgo => {
-                                self.seen_ms_ago = Some(sub_attr.payload.clone())
-                            }
-                            Nl80211Bss::BssStatus => self.status = Some(sub_attr.payload.clone()),
-                            Nl80211Bss::BssBssid => self.bssid = Some(sub_attr.payload.clone()),
-                            Nl80211Bss::BssSignalMbm => {
-                                self.signal = Some(sub_attr.payload.clone())
-                            }
-                            _ => (),
+            if attr.nla_type == Nl80211Attr::AttrBss {
+                let sub_handle = attr.get_nested_attributes::<Nl80211Bss>().unwrap();
+                for sub_attr in sub_handle.iter() {
+                    match sub_attr.nla_type {
+                        Nl80211Bss::BssBeaconInterval => {
+                            self.beacon_interval = Some(sub_attr.payload.clone())
                         }
+                        Nl80211Bss::BssFrequency => self.frequency = Some(sub_attr.payload.clone()),
+                        Nl80211Bss::BssSeenMsAgo => {
+                            self.seen_ms_ago = Some(sub_attr.payload.clone())
+                        }
+                        Nl80211Bss::BssStatus => self.status = Some(sub_attr.payload.clone()),
+                        Nl80211Bss::BssBssid => self.bssid = Some(sub_attr.payload.clone()),
+                        Nl80211Bss::BssSignalMbm => self.signal = Some(sub_attr.payload.clone()),
+                        _ => (),
                     }
                 }
-                _ => (),
             }
         }
         self.to_owned()
