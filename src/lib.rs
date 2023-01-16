@@ -25,9 +25,9 @@
 //! extern crate nl80211;
 //! extern crate neli;
 //!
-//! use nl80211::Socket;
+//! use nl80211::{Socket, Nl80211Error};
 //!
-//! fn main() -> Result<(), neli::err::NlError> {
+//! fn main() -> Result<(), Nl80211Error> {
 //!   let interfaces = Socket::connect()?.get_interfaces_info()?;
 //!
 //!   for interface in interfaces {
@@ -67,9 +67,9 @@
 //! extern crate nl80211;
 //! extern crate neli;
 //!
-//! use nl80211::Socket;
+//! use nl80211::{Socket, Nl80211Error};
 //!
-//! fn main() -> Result<(), neli::err::NlError> {
+//! fn main() -> Result<(), Nl80211Error> {
 //!   let interfaces = Socket::connect()?.get_interfaces_info()?;
 //!   for interface in interfaces {
 //!       let station = interface.get_station_info();
@@ -92,14 +92,10 @@
 //! }
 //! ```
 
-mod nl80211traits;
-pub use nl80211traits::*;
 mod cmd;
 pub use cmd::*;
 mod attr;
 pub use attr::*;
-mod parse_attr;
-pub use parse_attr::*;
 mod socket;
 pub use socket::Socket;
 mod consts;
@@ -110,3 +106,6 @@ mod station;
 pub use station::*;
 mod bss;
 pub use bss::*;
+mod error;
+mod types;
+pub use error::*;

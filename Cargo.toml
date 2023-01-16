@@ -14,3 +14,5 @@ repository = "https://github.com/Eonm/nl80211"
 buffering = { version = "0.3.2",  features = ["copy"] }
 neli = "0.4.3-r1"
 hex = "0.4.0"
+thiserror = "1.0"
+getset = "0.1.2"

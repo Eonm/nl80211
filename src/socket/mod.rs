@@ -1,10 +1,11 @@
-use crate::bss::Bss;
-use crate::nl80211traits::ParseNlAttr;
-use crate::station::Station;
+use std::convert::TryInto;
+
 use crate::attr::Nl80211Attr;
+use crate::bss::Bss;
 use crate::cmd::Nl80211Cmd;
 use crate::consts::{NL_80211_GENL_NAME, NL_80211_GENL_VERSION};
 use crate::interface::Interface;
+use crate::station::Station;
 use neli::consts::{NlFamily, NlmF, Nlmsg};
 use neli::genl::Genlmsghdr;
 use neli::nl::Nlmsghdr;
@@ -23,14 +24,14 @@ impl Socket {
     /// # Example
     ///
     /// ```no_run
-    /// # use nl80211::{Socket, Nl80211Attr, Nl80211Cmd, NL_80211_GENL_VERSION};
+    /// # use nl80211::{Socket, Nl80211Attr, Nl80211Error, Nl80211Cmd, NL_80211_GENL_VERSION};
     /// # use neli::nlattr::Nlattr;
     /// # use neli::genl::Genlmsghdr;
     /// # use neli::nl::Nlmsghdr;
     /// # use neli::err::NlError;
     /// # use neli::consts::{NlFamily,NlmF,Nlmsg};
     ///
-    /// # fn main() -> Result<(), neli::err::NlError> {
+    /// # fn main() -> Result<(), Nl80211Error> {
     ///     // Create a new nl80211 socket and use this socket to send nl80211 commands
     ///     let mut nl80211sock = Socket::connect()?;
     ///
@@ -56,7 +57,6 @@ impl Socket {
     ///     let mut iter = nl80211sock.sock.iter::<Nlmsg, Genlmsghdr<Nl80211Cmd, Nl80211Attr>>();
     ///     while let Some(Ok(response)) = iter.next() {
     ///         match response.nl_type {
-    ///            Nlmsg::Error => panic!("Error"),
     ///            Nlmsg::Done => break,
     ///            _ => {
     ///             // Parsing netlink messages here
@@ -89,9 +89,9 @@ impl Socket {
     /// # Example
     ///
     /// ```no_run
-    /// # use nl80211::Socket;
+    /// # use nl80211::{Socket, Nl80211Error};
     ///
-    /// # fn main() -> Result<(), neli::err::NlError>{
+    /// # fn main() -> Result<(), Nl80211Error>{
     ///     let wifi_interfaces = Socket::connect()?.get_interfaces_info();
     ///     for wifi_interface in wifi_interfaces? {
     ///         println!("{}", wifi_interface);
@@ -99,7 +99,7 @@ impl Socket {
     /// #   Ok(())
     /// # }
     ///```
-    pub fn get_interfaces_info(&mut self) -> Result<Vec<Interface>, neli::err::NlError> {
+    pub fn get_interfaces_info(&mut self) -> Result<Vec<Interface>, crate::error::Nl80211Error> {
         let mut interfaces = Vec::new();
         let nl80211sock = &mut self.sock;
 
@@ -122,11 +122,10 @@ impl Socket {
 
         while let Some(Ok(response)) = iter.next() {
             match response.nl_type {
-                Nlmsg::Error => panic!("Error"),
                 Nlmsg::Done => break,
                 _ => {
                     let handle = response.nl_payload.get_attr_handle();
-                    interfaces.push(Interface::default().parse(handle));
+                    interfaces.push(handle.try_into()?);
                 }
             };
         }
@@ -139,13 +138,13 @@ impl Socket {
     /// # Example
     ///
     /// ```no_run
-    /// # use nl80211::Socket;
+    /// # use nl80211::{Socket, Nl80211Error};
     ///
-    /// # fn main() -> Result<(), neli::err::NlError>{
+    /// # fn main() -> Result<(), Nl80211Error>{
     ///   // First of all we need to get wifi interface information to get more data
     ///   let wifi_interfaces = Socket::connect()?.get_interfaces_info();
     ///   for wifi_interface in wifi_interfaces? {
-    ///     if let Some(netlink_index) = wifi_interface.index {
+    ///     if let Some(netlink_index) = wifi_interface.index() {
     ///
     ///       // Then for each wifi interface we can fetch station information
     ///       let station_info = Socket::connect()?.get_station_info(&netlink_index.clone())?;
@@ -158,7 +157,7 @@ impl Socket {
     pub fn get_station_info(
         &mut self,
         interface_attr_if_index: &Vec<u8>,
-    ) -> Result<Station, neli::err::NlError> {
+    ) -> Result<Station, crate::error::Nl80211Error> {
         let nl80211sock = &mut self.sock;
 
         let mut attrs: Vec<Nlattr<Nl80211Attr, Vec<u8>>> = vec![];
@@ -186,11 +185,11 @@ impl Socket {
 
         while let Some(Ok(response)) = iter.next() {
             match response.nl_type {
-                Nlmsg::Error => panic!("Error"),
+                Nlmsg::Error => (),
                 Nlmsg::Done => break,
                 _ => {
                     let handle = response.nl_payload.get_attr_handle();
-                    return Ok(Station::default().parse(handle));
+                    return Ok(handle.try_into().unwrap());
                 }
             };
         }
@@ -200,7 +199,7 @@ impl Socket {
     pub fn get_bss_info(
         &mut self,
         interface_attr_if_index: &Vec<u8>,
-    ) -> Result<Bss, neli::err::NlError> {
+    ) -> Result<Bss, crate::error::Nl80211Error> {
         let nl80211sock = &mut self.sock;
 
         let mut attrs: Vec<Nlattr<Nl80211Attr, Vec<u8>>> = vec![];
@@ -229,11 +228,11 @@ impl Socket {
 
         while let Some(Ok(response)) = iter.next() {
             match response.nl_type {
-                Nlmsg::Error => panic!("Error"),
+                Nlmsg::Error => (),
                 Nlmsg::Done => break,
                 _ => {
                     let handle = response.nl_payload.get_attr_handle();
-                    return Ok(Bss::default().parse(handle));
+                    return Ok(handle.try_into().unwrap());
                 }
             }
         }
