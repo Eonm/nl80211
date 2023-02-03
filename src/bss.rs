@@ -1,45 +1,14 @@
 use crate::attr::Nl80211Attr;
 use crate::attr::Nl80211Bss;
-use crate::types;
+use crate::types::*;
+use getset::{CopyGetters, Getters};
 use neli::nlattr::AttrHandle;
+use nl80211_derive::NlType;
 use std::convert::TryInto;
 use std::fmt;
 
-use getset::{CopyGetters, Getters};
-
-types! {
-    /// Bssid of a BSS
-    => [u8;6] Bssid
-}
-
-types! {
-    /// Frequency in MHz (u32)
-    =>  u32 Frequency
-}
-
-types! {
-    /// Beacon interval of the (I)BSS (u16)
-    => u16 BeaconInterval
-}
-
-types! {
-    /// Age of this BSS entry in ms (u32)
-    => u32 SeenMsAgo
-}
-
-types! {
-    /// Status, if this BSS is "used" (u8)
-    => u8 Status
-}
-
-types! {
-    /// Signal strength of probe response/beacon in mBm (100 * dBm) (i32)
-    => i32 Signal
-}
-
 /// A struct representing a BSS (Basic Service Set)
-#[derive(Debug, Clone, PartialEq, Default)]
-#[derive(Getters, CopyGetters)]
+#[derive(Debug, Clone, PartialEq, Default, Getters, CopyGetters)]
 pub struct Bss {
     #[getset(get = "pub")]
     bssid: Option<Bssid>,

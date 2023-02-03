@@ -1,58 +1,14 @@
 use crate::attr::*;
 use crate::socket::Socket;
 use crate::station::Station;
-use crate::types;
+use crate::types::*;
+use getset::{Getters, CopyGetters};
 use neli::nlattr::AttrHandle;
-use std::convert::TryFrom;
-use std::convert::TryInto;
+use std::convert::{TryFrom, TryInto};
 use std::fmt;
 
-use getset::{CopyGetters, Getters};
-
-types! {
-    /// Interface essid
-    => String Essid
-}
-
-types! {
-    /// Interface name (u8, String)
-    => String Name
-}
-types! {
-    /// Interface transmit power level in signed mBm units.
-    => u32 Power
-}
-
-types! {
-    /// Interface MAC address
-    => [u8; 6] Mac
-}
-
-
-types! {
-    /// Interface frequency of the selected channel (u32, MHz)    
-    => u32 Frequency
-}
-
-types! {
-    /// Interface chanel
-    => u32 Channel
-}
-
-
-types! {
-    /// index of wiphy to operate on, cf. /sys/class/ieee80211/<phyname>/index
-    => u32 Phy
-}
-
-types! {
-     /// Wireless device identifier, used for pseudo-devices that don't have a netdev (u64)
-    => u64 Device
-}
-
 /// A struct representing a wifi interface
-#[derive(Clone, Debug, PartialEq, Default)]
-#[derive(Getters, CopyGetters)]
+#[derive(Clone, Debug, PartialEq, Default, Getters, CopyGetters)]
 pub struct Interface {
     // A netlink interface index. This index is used to fetch extra information with nl80211
     #[getset(get = "pub")]
@@ -103,7 +59,7 @@ impl TryFrom<AttrHandle<'_, Nl80211Attr>> for Interface {
                     interface.ssid = Some(payload.into());
                 }
                 Nl80211Attr::AttrMac => {
-                    interface.mac = Some(payload.try_into()?);
+                    interface.mac = Some(payload.into());
                 }
                 Nl80211Attr::AttrIfname => {
                     interface.name = Some(payload.into());

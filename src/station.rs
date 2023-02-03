@@ -1,64 +1,12 @@
 use crate::attr::{Nl80211Attr, Nl80211StaInfo};
-use crate::types;
+use crate::types::*;
 
 use neli::nlattr::AttrHandle;
 use std::{convert::TryInto, fmt};
-use crate::bss::Bssid;
 
 use getset::{CopyGetters, Getters};
 
-types! {
-    /// Signal strength average (i8, dBm)
-    => i8 AverageSignal
-}
-
-types! {
-
-    /// Count of times beacon loss was detected (u32)
-    => u32 BeaconLoss
-}
-
-types! {
-    /// Time since the station is last connected in seconds (u32)
-    => u32 ConnectedTime
-}
-
-types! {
-    /// Reception bitrate (u8)
-    => u8 RxBitRate
-}
-
-types! {
-    /// Total received packets (MSDUs and MMPDUs) from this station (u32)
-    => u32 RxPackets
-}
-
-types! {
-    /// Signal strength of last received PPDU (u8, dBm)
-    => i8 Signal
-}
-
-types! {
-    /// Transmission bitrate (u8)
-    => u32 TxBitRate
-}
-types! {
-    /// Total failed packets (MPDUs) to this station (u32)
-    => u32 TxFailed
-}
-
-types! {
-    /// Total transmitted packets (MSDUs and MMPDUs) to this station (u32)
-    => u32 TxPackets
-}
-
-types! {
-    /// Total retries (MPDUs) to this station (u32)
-    => u32 TxRetries
-}
-
-#[derive(Clone, Debug, PartialEq, Default)]
-#[derive(Getters, CopyGetters)]
+#[derive(Clone, Debug, PartialEq, Default, Getters, CopyGetters)]
 /// A struct representing a remote station (Access Point)
 pub struct Station {
     #[getset(get = "pub")]
@@ -89,7 +37,7 @@ impl std::convert::TryFrom<AttrHandle<'_, Nl80211Attr>> for Station {
     type Error = crate::error::Nl80211Error;
 
     fn try_from(value: AttrHandle<Nl80211Attr>) -> Result<Self, Self::Error> {
-        /// Parse netlink messages returned by the nl80211 command CmdGetStation
+        // Parse netlink messages returned by the nl80211 command CmdGetStation
         let mut station = Station::default();
 
         for attr in value.iter() {
@@ -174,7 +122,7 @@ impl fmt::Display for Station {
         if let Some(connected_time) = &self.connected_time {
             result.push(format!(
                 "connected time : {} minutes",
-                connected_time.0 as f32 / 60.0
+                connected_time.inner() as f32 / 60.0
             ))
         };
 
@@ -199,11 +147,11 @@ impl fmt::Display for Station {
         };
 
         if let Some(rx_bitrate) = &self.rx_bitrate {
-            result.push(format!("rx bitrate : {} Mb/s", rx_bitrate.0 * 10))
+            result.push(rx_bitrate.to_string())
         };
 
         if let Some(tx_bitrate) = &self.tx_bitrate {
-            result.push(format!("tx bitrate : {} Mb/s", tx_bitrate.0 * 10))
+            result.push(tx_birate.to_string())
         }
 
         if let Some(tx_retries) = &self.tx_retries {
