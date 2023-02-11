@@ -16,6 +16,7 @@ struct NlTypeArgs {
     after: Option<String>,
     #[darling(default)]
     cast: Option<darling::util::SpannedValue<String>>,
+    fmt: Option<String>,
     data: ast::Data<(), darling::util::SpannedValue<ItemStructField>>,
 }
 
@@ -79,6 +80,25 @@ pub fn derive_nltype(input: TokenStream) -> TokenStream {
                 }
             )
         }
+        "[u8 ; 6]" => {
+            quote! {
+                impl From<[u8 ; 6]> for #struct_ident {
+                    fn from(value: [u8 ; 6]) -> Self {
+                        #struct_ident(value)
+                    }
+                }
+
+                impl std::convert::TryFrom<&[u8]> for #struct_ident {
+                    type Error = std::array::TryFromSliceError;
+
+                    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+                        Ok(#struct_ident(
+                            std::convert::TryInto::try_into(value)?,
+                        ))
+                    }
+                }
+            }
+        }
         _ => {
             quote_spanned! {struct_ty.span()=>
                 compile_error!("This type is not supported by NlType");
@@ -99,18 +119,23 @@ pub fn derive_nltype(input: TokenStream) -> TokenStream {
         }
     };
 
+    let formater = args.fmt.unwrap_or("{}".to_string());
+    let format_value = quote! {
+        format!(#formater, #self_value)
+    };
+
     let display_write_statement = match (args.before, args.after) {
         (Some(before), Some(after)) => {
-            quote!(write!(f, "{}{}{}", #before, #self_value, #after))
+            quote!(write!(f, "{}{}", #before, #format_value, #after))
         }
         (Some(before), None) => {
-            quote!(write!(f, "{}{}", #before, #self_value))
+            quote!(write!(f, "{}{}", #before, #format_value))
         }
         (None, Some(after)) => {
-            quote!(write!(f, "{}{}", #self_value, #after))
+            quote!(write!(f, "{}{}", #format_value, #after))
         }
         _ => {
-            quote!(write!(f, "{}", #self_value))
+            quote!(write!(f, "{}", #format_value))
         }
     };
 

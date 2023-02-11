@@ -29,27 +29,27 @@ impl fmt::Display for Bss {
         let mut result = Vec::new();
 
         if let Some(bssid) = &self.bssid {
-            result.push(format!("bssid : {}", bssid))
+            result.push(bssid.to_string())
         };
 
         if let Some(frequency) = &self.frequency {
-            result.push(format!("frequency : {} Ghz", frequency.0 as f32 / 1000.00))
+            result.push(frequency.to_string())
         };
 
         if let Some(beacon_interval) = &self.beacon_interval {
-            result.push(format!("beacon interval : {} TUs", beacon_interval))
+            result.push(beacon_interval.to_string())
         };
 
         if let Some(seen_ms_ago) = &self.seen_ms_ago {
-            result.push(format!("last seen : {} ms", seen_ms_ago))
+            result.push(seen_ms_ago.to_string())
         };
 
         if let Some(status) = &self.status {
-            result.push(format!("status : {}", status))
+            result.push(status.to_string())
         };
 
         if let Some(signal) = &self.signal {
-            result.push(format!("signal : {:?} dBm", signal.0 as f32 / 100.00))
+            result.push(signal.to_string())
         };
 
         write!(f, "{}", result.join("\n"))
@@ -101,15 +101,15 @@ mod test_bss {
             beacon_interval: Some(100.into()),
             seen_ms_ago: Some(100.into()),
             status: Some(1.into()),
-            signal: Some((-5300).into()),
+            signal: Some((53).into()),
         };
 
-        let expected_output = r#"bssid : FF:FF:FF:FF:FF:FF
-        frequency : 2.412 Ghz
-        beacon interval : 100 TUs
-        last seen : 100 ms
-        status : 1
-        signal : -53.0 dBm"#;
+        let expected_output = r#"bssid: FF:FF:FF:FF:FF:FF
+        frequency: 2.412 Ghz
+        beacon interval: 100 TUs
+        last seen: 100 ms ago
+        status: 1
+        signal strength: -53.0 dBm"#;
 
         assert_eq!(bss.to_string(), expected_output.replace("\n        ", "\n"))
     }

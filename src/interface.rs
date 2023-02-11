@@ -2,7 +2,7 @@ use crate::attr::*;
 use crate::socket::Socket;
 use crate::station::Station;
 use crate::types::*;
-use getset::{Getters, CopyGetters};
+use getset::{CopyGetters, Getters};
 use neli::nlattr::AttrHandle;
 use std::convert::{TryFrom, TryInto};
 use std::fmt;
@@ -59,7 +59,7 @@ impl TryFrom<AttrHandle<'_, Nl80211Attr>> for Interface {
                     interface.ssid = Some(payload.into());
                 }
                 Nl80211Attr::AttrMac => {
-                    interface.mac = Some(payload.into());
+                    interface.mac = Some(payload.try_into()?);
                 }
                 Nl80211Attr::AttrIfname => {
                     interface.name = Some(payload.into());
@@ -82,35 +82,35 @@ impl std::fmt::Display for Interface {
         let mut result = Vec::new();
 
         if let Some(ssid) = &self.ssid {
-            result.push(format!("essid : {}", ssid))
+            result.push(ssid.to_string())
         };
 
         if let Some(mac) = &self.mac {
-            result.push(format!("mac : {}", mac))
+            result.push(mac.to_string())
         };
 
         if let Some(name) = &self.name {
-            result.push(format!("interface : {}", name))
+            result.push(name.to_string())
         };
 
         if let Some(frequency) = &self.frequency {
-            result.push(format!("frequency : {} Ghz", frequency.0 as f64 / 1000.00))
+            result.push(frequency.to_string())
         };
 
         if let Some(chanel) = &self.channel {
-            result.push(format!("channel : {}", chanel))
+            result.push(chanel.to_string())
         };
 
         if let Some(power) = &self.power {
-            result.push(format!("power : {} dBm", power.0 / 100))
+            result.push(power.to_string())
         };
 
         if let Some(phy) = &self.phy {
-            result.push(format!("phy : {}", phy))
+            result.push(phy.to_string())
         };
 
         if let Some(device) = &self.device {
-            result.push(format!("device : {}", device))
+            result.push(device.to_string())
         };
 
         write!(f, "{}", result.join("\n"))

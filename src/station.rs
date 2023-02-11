@@ -116,34 +116,32 @@ impl fmt::Display for Station {
         let mut result = Vec::new();
 
         if let Some(bssid) = &self.bssid {
-            result.push(format!("bssid : {}", bssid))
+            result.push(bssid.to_string())
         };
 
         if let Some(connected_time) = &self.connected_time {
-            result.push(format!(
-                "connected time : {} minutes",
-                connected_time.inner() as f32 / 60.0
-            ))
+            result.push(connected_time.to_string())
         };
 
         if let Some(beacon_loss) = &self.beacon_loss {
-            result.push(format!("beacon loss : {}", beacon_loss))
+            result.push(beacon_loss.to_string())
+
         };
 
         if let Some(signal) = &self.signal {
-            result.push(format!("signal : {} dBm", signal))
+            result.push(signal.to_string())
         };
 
         if let Some(average_signal) = &self.average_signal {
-            result.push(format!("average signal : {} dBm", average_signal))
+            result.push(average_signal.to_string())
         };
 
         if let Some(rx_packets) = &self.rx_packets {
-            result.push(format!("rx packets : {}", rx_packets))
+            result.push(rx_packets.to_string())
         };
 
         if let Some(tx_packets) = &self.tx_packets {
-            result.push(format!("tx packets : {}", tx_packets))
+            result.push(tx_packets.to_string())
         };
 
         if let Some(rx_bitrate) = &self.rx_bitrate {
@@ -151,15 +149,15 @@ impl fmt::Display for Station {
         };
 
         if let Some(tx_bitrate) = &self.tx_bitrate {
-            result.push(tx_birate.to_string())
+            result.push(tx_bitrate.to_string())
         }
 
         if let Some(tx_retries) = &self.tx_retries {
-            result.push(format!("tx retries : {}", tx_retries))
+            result.push(tx_retries.to_string())
         }
 
         if let Some(tx_failed) = &self.tx_failed {
-            result.push(format!("tx failed : {}", tx_failed))
+            result.push(tx_failed.to_string())
         }
 
         write!(f, "{}", result.join("\n"))

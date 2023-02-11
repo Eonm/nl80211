@@ -1,0 +1,13 @@
+c:\Users\eon\Dev\nl80211\nl80211-derive\target\debug\deps\quote-5c1eef257d264c90.rmeta: C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\lib.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ext.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\format.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ident_fragment.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\to_tokens.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\runtime.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\spanned.rs
+
+c:\Users\eon\Dev\nl80211\nl80211-derive\target\debug\deps\libquote-5c1eef257d264c90.rlib: C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\lib.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ext.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\format.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ident_fragment.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\to_tokens.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\runtime.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\spanned.rs
+
+c:\Users\eon\Dev\nl80211\nl80211-derive\target\debug\deps\quote-5c1eef257d264c90.d: C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\lib.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ext.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\format.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ident_fragment.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\to_tokens.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\runtime.rs C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\spanned.rs
+
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\lib.rs:
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ext.rs:
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\format.rs:
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\ident_fragment.rs:
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\to_tokens.rs:
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\runtime.rs:
+C:\Users\eon\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.23\src\spanned.rs:
