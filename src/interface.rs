@@ -135,14 +135,14 @@ mod test_interface {
             device: Some(1.into()),
         };
 
-        let expected_output = r#"essid : eduroam
-        mac : FF:FF:FF:FF:FF:FF
-        interface : wlp5s0
-        frequency : 2.412 Ghz
-        channel : 1
-        power : 17 dBm
-        phy : 0
-        device : 1"#;
+        let expected_output = r#"essid: eduroam
+        mac: FF:FF:FF:FF:FF:FF
+        name: wlp5s0
+        frequency: 2.412 GHz
+        channel: 1
+        power: 17 dBm
+        phy: 0
+        device: 1"#;
 
         assert_eq!(
             interface.to_string(),

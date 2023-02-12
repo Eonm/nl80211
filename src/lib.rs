@@ -50,7 +50,7 @@
 //!       // essid : eduroam
 //!       // mac : FF:FF:FF:FF:FF:FF
 //!       // interface : wlp5s0
-//!       // frequency : 2.412 Ghz
+//!       // frequency : 2.412 GHz
 //!       // channel : 1
 //!       // power : 17 dBm
 //!       // phy : 0
@@ -109,5 +109,3 @@ pub use bss::*;
 mod error;
 mod types;
 pub use error::*;
-
-  

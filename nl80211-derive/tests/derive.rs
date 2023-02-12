@@ -80,3 +80,12 @@ fn test_cast() {
 
     assert_eq!(Double(2).to_string(), "4")
 }
+
+#[test]
+fn test_formatter() {
+    #[derive(NlType)]
+    #[fmt(fmt = "{:.2}")]
+    pub struct Float(f32);
+
+    assert_eq!("0.20", Float(0.2).to_string())
+}

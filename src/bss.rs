@@ -105,11 +105,11 @@ mod test_bss {
         };
 
         let expected_output = r#"bssid: FF:FF:FF:FF:FF:FF
-        frequency: 2.412 Ghz
+        frequency: 2.412 GHz
         beacon interval: 100 TUs
         last seen: 100 ms ago
         status: 1
-        signal strength: -53.0 dBm"#;
+        signal: -53.0 dBm"#;
 
         assert_eq!(bss.to_string(), expected_output.replace("\n        ", "\n"))
     }

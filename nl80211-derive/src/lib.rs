@@ -40,7 +40,8 @@ pub fn derive_nltype(input: TokenStream) -> TokenStream {
         .ty;
 
     let try_from_impl = match struct_ty.clone().into_token_stream().to_string().as_ref() {
-        "i8" | "u8" | "i16" | "u16" | "i32" | "u32" | "i64" | "u64" | "i128" | "u128" => {
+        "i8" | "u8" | "i16" | "u16" | "i32" | "u32" | "f32" | "i64" | "u64" | "f64" | "i128"
+        | "u128" => {
             quote!(
                 impl From<#struct_ty> for #struct_ident {
                     fn from(value: #struct_ty) -> Self {
@@ -119,23 +120,44 @@ pub fn derive_nltype(input: TokenStream) -> TokenStream {
         }
     };
 
-    let formater = args.fmt.unwrap_or("{}".to_string());
-    let format_value = quote! {
-        format!(#formater, #self_value)
-    };
+    let formatter = args.fmt.unwrap_or_else(|| "{}".to_string());
 
     let display_write_statement = match (args.before, args.after) {
         (Some(before), Some(after)) => {
-            quote!(write!(f, "{}{}", #before, #format_value, #after))
+            let mut fmt_str = String::new();
+            fmt_str.push_str("{}");
+            fmt_str.push_str(&formatter);
+            fmt_str.push_str("{}");
+
+            let fmt_str_tokens = quote!(#fmt_str);
+
+            quote!(write!(f, #fmt_str_tokens, #before, #self_value, #after))
         }
         (Some(before), None) => {
-            quote!(write!(f, "{}{}", #before, #format_value))
+            let mut fmt_str = String::new();
+            fmt_str.push_str("{}");
+            fmt_str.push_str(&formatter);
+
+            let fmt_str_tokens = quote!(#fmt_str);
+
+            quote!(write!(f, #fmt_str_tokens, #before, #self_value))
         }
         (None, Some(after)) => {
-            quote!(write!(f, "{}{}", #format_value, #after))
+            let mut fmt_str = String::new();
+            fmt_str.push_str(&formatter);
+            fmt_str.push_str("{}");
+
+            let fmt_str_tokens = quote!(#fmt_str);
+
+            quote!(write!(f, #fmt_str_tokens, #self_value, #after))
         }
         _ => {
-            quote!(write!(f, "{}", #format_value))
+            let mut fmt_str = String::new();
+            fmt_str.push_str(&formatter);
+
+            let fmt_str_tokens = quote!(#fmt_str);
+
+            quote!(write!(f, #fmt_str_tokens, #self_value))
         }
     };
 

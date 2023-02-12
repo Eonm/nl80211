@@ -125,7 +125,6 @@ impl fmt::Display for Station {
 
         if let Some(beacon_loss) = &self.beacon_loss {
             result.push(beacon_loss.to_string())
-
         };
 
         if let Some(signal) = &self.signal {
@@ -174,30 +173,30 @@ mod tests_station {
     #[test]
     fn test_pretty_format() {
         let station = Station {
-            average_signal: Some((-59).into()),
+            average_signal: Some((59).into()),
             beacon_loss: Some(0.into()),
             bssid: Some([255, 255, 255, 255, 255, 255].into()),
             connected_time: Some(5494.into()),
             rx_bitrate: Some(12.into()),
             rx_packets: Some(425580.into()),
-            signal: Some((-61).into()),
+            signal: Some((61).into()),
             tx_bitrate: Some(13.into()),
             tx_failed: Some(45.into()),
             tx_packets: Some(153870.into()),
             tx_retries: Some(28425.into()),
         };
 
-        let expected_output = r#"bssid : FF:FF:FF:FF:FF:FF
-        connected time : 91.566666 minutes
-        beacon loss : 0
-        signal : -61 dBm
-        average signal : -59 dBm
-        rx packets : 425580
-        tx packets : 153870
-        rx bitrate : 120 Mb/s
-        tx bitrate : 130 Mb/s
-        tx retries : 28425
-        tx failed : 45"#;
+        let expected_output = r#"bssid: FF:FF:FF:FF:FF:FF
+        connected time: 1h 31m 34s
+        beacon loss: 0
+        signal: -61.0 dBm
+        average signal: -59.0 dBm
+        rx packets: 425580
+        tx packets: 153870
+        rx bitrate: 120 Mb/s
+        tx bitrate: 130 Mb/s
+        tx retries: 28425
+        tx failed: 45"#;
 
         assert_eq!(
             station.to_string(),

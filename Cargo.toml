@@ -17,3 +17,4 @@ hex = "0.4.0"
 thiserror = "1.0"
 getset = "0.1.2"
 nl80211-derive = { version="*", path="./nl80211-derive"}
+humantime = "*"
